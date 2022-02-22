@@ -43,6 +43,9 @@ function App() {
   const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
   const [language, setLanguage] = useSetting<string>("language", "Nuer");
 
+  const gameName: Record<string, string> =
+      {"Nuer": "Nuerdle",
+      "Archi": "Archidl"};
   useEffect(() => {
     document.body.className = dark ? "dark" : "";
     if (urlParam("today") !== null || urlParam("todas") !== null) {
@@ -67,16 +70,8 @@ function App() {
 
   return (
     <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
-      <h1>
-        <span
-          style={{
-            color: difficulty > 0 ? "#e66" : "inherit",
-            fontStyle: difficulty > 1 ? "italic" : "inherit",
-          }}
-        >
-          hell
-        </span>
-        o wordl
+      <h1><img src="logo-main.png" alt="SMG" height="40px" className="logo"/>
+          <span className="gametitle">{gameName[language]}</span>
       </h1>
       <div className="top-right">
         {page !== "game" ? (

@@ -2,14 +2,20 @@
 
 - [x] Move keyboard selection logic to language selection logic
 - [x] Add nuer keyboard
-- [] Add archi keyboard
-- [] Restore letter slider
 - [x] decouple letters in words vs chars (diacritics are part of a single letter) -- use a separator
-- [] Add custom intros per languages + json
 - [x] Merge targets  & dictionary
 - [x] Add Nuer dictionary
-- [] Add Archi dictionary
+- 
+- [] Restore letter slider
+- [] Add custom intros per languages + json
+ Write something for Nuer speakers 
 - [] Change dictionary to a richer struture, with "hint" content and linking to our resources
+  - => spreadsheet, has the IDs // check for unique IDs
+  - long underscores: wrong character: replace by normal/short ones (as in the bible)
+  - generate links: https://www.nuerlexicon.com/search.php?id=422
+- [] Change the help page
+- [] Add archi keyboard
+- [] Add Archi dictionary
 
 # hello wordl
 
