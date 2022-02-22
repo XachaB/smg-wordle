@@ -1,3 +1,15 @@
+# TODO
+
+- [x] Move keyboard selection logic to language selection logic
+- [x] Add nuer keyboard
+- [] Add archi keyboard
+- [] decouple letters in words vs chars (diacritics are part of a single letter) -- use a separator
+- [] Add custom intros per languages + json
+- [] Merge targets  & dictionary
+- [] Add Nuer dictionary
+- [] Add Archi dictionary
+- [] Change dictionary to a richer struture, with "hint" content and linking to our resources
+
 # hello wordl
 
 It's [Wordle](https://www.powerlanguage.co.uk/wordle/) but you can play forever!

@@ -11,14 +11,14 @@ export interface CluedLetter {
   letter: string;
 }
 
-export function clue(word: string, target: string): CluedLetter[] {
+export function clue(word: string[], target: string[]): CluedLetter[] {
   let elusive: string[] = [];
-  target.split("").forEach((letter, i) => {
+  target.forEach((letter, i) => {
     if (word[i] !== letter) {
       elusive.push(letter);
     }
   });
-  return word.split("").map((letter, i) => {
+  return word.map((letter, i) => {
     let j: number;
     if (target[i] === letter) {
       return { clue: Clue.Correct, letter };
@@ -61,7 +61,7 @@ export function describeClue(clue: CluedLetter[]): string {
 export function violation(
   difficulty: Difficulty,
   clues: CluedLetter[],
-  guess: string
+  guess: string[]
 ): string | undefined {
   if (difficulty === Difficulty.Normal) {
     return undefined;
@@ -72,7 +72,7 @@ export function violation(
     const clueCount = clues.filter(
       (c) => c.letter === letter && c.clue !== Clue.Absent
     ).length;
-    const guessCount = guess.split(letter).length - 1;
+    const guessCount = guess.length - 1;
     const glyph = letter.toUpperCase();
     const glyphs = glyph + (clueCount !== 1 ? "s" : "");
     const nth = ordinal(i + 1);

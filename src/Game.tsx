@@ -1,14 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Row, RowState } from "./Row";
-import dictionary from "./dictionary.json";
+import nuer_words from "./nuer_words.json";
 import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
-import targetList from "./targets.json";
 import {
   describeSeed,
   dictionarySet,
   Difficulty,
-  gameName,
   pick,
   resetRng,
   seed,
@@ -28,51 +26,54 @@ interface GameProps {
   hidden: boolean;
   difficulty: Difficulty;
   colorBlind: boolean;
-  keyboardLayout: string;
+  language: string;
 }
 
-const targets = targetList.slice(0, targetList.indexOf("murky") + 1); // Words no rarer than this one
 const minLength = 4;
-const defaultLength = 5;
 const maxLength = 11;
-const limitLength = (n: number) =>
-  n >= minLength && n <= maxLength ? n : defaultLength;
 
-function randomTarget(wordLength: number): string {
-  const eligible = targets.filter((word) => word.length === wordLength);
-  let candidate: string;
-  do {
-    candidate = pick(eligible);
-  } while (/\*/.test(candidate));
-  return candidate;
+const dictionnaries: Record<string, string[]> = {
+  "Nuer": nuer_words,
 }
 
-function getChallengeUrl(target: string): string {
+function randomTarget(wordLength: number, language: string): string[] {
+  const eligible = dictionnaries[language].filter((word) => word.length === wordLength + (wordLength-1));
+  console.log(eligible);
+  return pick(eligible).split("|");
+}
+
+function getChallengeUrl(target: string[]): string {
+  console.log("Got challenge url");
   return (
     window.location.origin +
     window.location.pathname +
     "?challenge=" +
-    encode(target)
+    encode(target.join("|"))
   );
 }
 
-let initChallenge = "";
+let initChallenge: string[] = [];
 let challengeError = false;
+console.log("No challenge error yet");
 try {
-  initChallenge = decode(urlParam("challenge") ?? "").toLowerCase();
+  console.log("Trying to init challenge with:");
+  console.log(urlParam("challenge"))
+  initChallenge = decode(urlParam("challenge") ?? "").split("|");
 } catch (e) {
   console.warn(e);
   challengeError = true;
 }
-if (initChallenge && !dictionarySet.has(initChallenge)) {
-  initChallenge = "";
+if (initChallenge && !dictionarySet.has(initChallenge.join("|"))) {
+  console.log("Nothing in the challenge");
+  initChallenge = [];
   challengeError = true;
 }
 
 function parseUrlLength(): number {
   const lengthParam = urlParam("length");
-  if (!lengthParam) return defaultLength;
-  return limitLength(Number(lengthParam));
+  if (!lengthParam) return 5;
+  const length = Number(lengthParam);
+  return length >= minLength && length <= maxLength ? length : 5;
 }
 
 function parseUrlGameNumber(): number {
@@ -84,18 +85,22 @@ function parseUrlGameNumber(): number {
 
 function Game(props: GameProps) {
   const [gameState, setGameState] = useState(GameState.Playing);
-  const [guesses, setGuesses] = useState<string[]>([]);
-  const [currentGuess, setCurrentGuess] = useState<string>("");
-  const [challenge, setChallenge] = useState<string>(initChallenge);
+  const [guesses, setGuesses] = useState<string[][]>([]);
+  const [currentGuess, setCurrentGuess] = useState<string[]>([]);
+  const [challenge, setChallenge] = useState<string[]>(initChallenge);
+  console.log("Challenge:");
+  console.log(challenge);
   const [wordLength, setWordLength] = useState(
-    challenge ? challenge.length : parseUrlLength()
+    challenge.length | parseUrlLength()
   );
+  console.log(wordLength);
   const [gameNumber, setGameNumber] = useState(parseUrlGameNumber());
   const [target, setTarget] = useState(() => {
     resetRng();
     // Skip RNG ahead to the parsed initial game number:
-    for (let i = 1; i < gameNumber; i++) randomTarget(wordLength);
-    return challenge || randomTarget(wordLength);
+    for (let i = 1; i < gameNumber; i++) randomTarget(wordLength, props.language);
+    console.log(randomTarget(wordLength, props.language));
+    return challenge || randomTarget(wordLength, props.language);
   });
   const [hint, setHint] = useState<string>(
     challengeError
@@ -119,13 +124,14 @@ function Game(props: GameProps) {
       // Clear the URL parameters:
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-    setChallenge("");
-    const newWordLength = limitLength(wordLength);
+    setChallenge([]);
+    const newWordLength =
+      wordLength >= minLength && wordLength <= maxLength ? wordLength : 5;
     setWordLength(newWordLength);
-    setTarget(randomTarget(newWordLength));
+    setTarget(randomTarget(newWordLength, props.language));
     setHint("");
     setGuesses([]);
-    setCurrentGuess("");
+    setCurrentGuess([]);
     setGameState(GameState.Playing);
     setGameNumber((x) => x + 1);
   };
@@ -164,13 +170,7 @@ function Game(props: GameProps) {
       return;
     }
     if (guesses.length === props.maxGuesses) return;
-    if (/^[a-z]$/i.test(key)) {
-      setCurrentGuess((guess) =>
-        (guess + key.toLowerCase()).slice(0, wordLength)
-      );
-      tableRef.current?.focus();
-      setHint("");
-    } else if (key === "Backspace") {
+    if (key === "Backspace") {
       setCurrentGuess((guess) => guess.slice(0, -1));
       setHint("");
     } else if (key === "Enter") {
@@ -178,7 +178,7 @@ function Game(props: GameProps) {
         setHint("Too short");
         return;
       }
-      if (!dictionary.includes(currentGuess)) {
+      if (!dictionnaries[props.language].includes(currentGuess.join("|"))) {
         setHint("Not a valid word");
         return;
       }
@@ -191,10 +191,10 @@ function Game(props: GameProps) {
         }
       }
       setGuesses((guesses) => guesses.concat([currentGuess]));
-      setCurrentGuess((guess) => "");
+      setCurrentGuess((guess) => []);
 
       const gameOver = (verbed: string) =>
-        `You ${verbed}! The answer was ${target.toUpperCase()}. (Enter to ${
+        `You ${verbed}! The answer was ${target.join().toUpperCase()}. (Enter to ${
           challenge ? "play a random game" : "play again"
         })`;
 
@@ -208,6 +208,12 @@ function Game(props: GameProps) {
         setHint("");
         speak(describeClue(clue(currentGuess, target)));
       }
+    }
+    else {
+
+      setCurrentGuess((guess) => guess.concat([key.toLowerCase()]).slice(0, wordLength));
+      tableRef.current?.focus();
+      setHint("");
     }
   };
 
@@ -230,7 +236,7 @@ function Game(props: GameProps) {
   const tableRows = Array(props.maxGuesses)
     .fill(undefined)
     .map((_, i) => {
-      const guess = [...guesses, currentGuess][i] ?? "";
+      const guess = [...guesses, currentGuess][i] ?? [];
       const cluedLetters = clue(guess, target);
       const lockedIn = i < guesses.length;
       if (lockedIn) {
@@ -269,7 +275,7 @@ function Game(props: GameProps) {
           id="wordLength"
           disabled={
             gameState === GameState.Playing &&
-            (guesses.length > 0 || currentGuess !== "" || challenge !== "")
+            (guesses.length > 0 || currentGuess !== [] || challenge !== [])
           }
           value={wordLength}
           onChange={(e) => {
@@ -278,8 +284,8 @@ function Game(props: GameProps) {
             setGameNumber(1);
             setGameState(GameState.Playing);
             setGuesses([]);
-            setCurrentGuess("");
-            setTarget(randomTarget(length));
+            setCurrentGuess([]);
+            setTarget(randomTarget(length, props.language));
             setWordLength(length);
             setHint(`${length} letters`);
           }}
@@ -289,7 +295,7 @@ function Game(props: GameProps) {
           disabled={gameState !== GameState.Playing || guesses.length === 0}
           onClick={() => {
             setHint(
-              `The answer was ${target.toUpperCase()}. (Enter to play again)`
+              `The answer was ${target.join("").toUpperCase()}. (Enter to play again)`
             );
             setGameState(GameState.Lost);
             (document.activeElement as HTMLElement)?.blur();
@@ -316,7 +322,7 @@ function Game(props: GameProps) {
         {hint || `\u00a0`}
       </p>
       <Keyboard
-        layout={props.keyboardLayout}
+        language={props.language}
         letterInfo={letterInfo}
         onKey={onKey}
       />
