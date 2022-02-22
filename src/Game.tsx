@@ -5,7 +5,7 @@ import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
 import {
   describeSeed,
-  dictionarySet,
+  dictionarySets,
   Difficulty,
   pick,
   resetRng,
@@ -37,13 +37,12 @@ const dictionnaries: Record<string, string[]> = {
 }
 
 function randomTarget(wordLength: number, language: string): string[] {
+  console.log("picking random target...")
   const eligible = dictionnaries[language].filter((word) => word.length === wordLength + (wordLength-1));
-  console.log(eligible);
   return pick(eligible).split("|");
 }
 
 function getChallengeUrl(target: string[]): string {
-  console.log("Got challenge url");
   return (
     window.location.origin +
     window.location.pathname +
@@ -54,18 +53,13 @@ function getChallengeUrl(target: string[]): string {
 
 let initChallenge: string[] = [];
 let challengeError = false;
-console.log("No challenge error yet");
 try {
-  console.log("Trying to init challenge with:");
-  console.log(urlParam("challenge"))
-  initChallenge = decode(urlParam("challenge") ?? "").split("|");
+  let preset =urlParam("challenge");
+  if (preset){
+    initChallenge = decode(preset).split("|");
+  }
 } catch (e) {
   console.warn(e);
-  challengeError = true;
-}
-if (initChallenge && !dictionarySet.has(initChallenge.join("|"))) {
-  console.log("Nothing in the challenge");
-  initChallenge = [];
   challengeError = true;
 }
 
@@ -88,24 +82,28 @@ function Game(props: GameProps) {
   const [guesses, setGuesses] = useState<string[][]>([]);
   const [currentGuess, setCurrentGuess] = useState<string[]>([]);
   const [challenge, setChallenge] = useState<string[]>(initChallenge);
-  console.log("Challenge:");
-  console.log(challenge);
+
   const [wordLength, setWordLength] = useState(
     challenge.length | parseUrlLength()
   );
-  console.log(wordLength);
   const [gameNumber, setGameNumber] = useState(parseUrlGameNumber());
   const [target, setTarget] = useState(() => {
     resetRng();
+    console.log("setting target... (game n°",gameNumber,")");
     // Skip RNG ahead to the parsed initial game number:
     for (let i = 1; i < gameNumber; i++) randomTarget(wordLength, props.language);
-    console.log(randomTarget(wordLength, props.language));
-    return challenge || randomTarget(wordLength, props.language);
+    let target_local = challenge.length ? challenge : randomTarget(wordLength, props.language);
+    return target_local;
   });
-  const [hint, setHint] = useState<string>(
-    challengeError
+  console.log("target:", target);
+  const [hint, setHint] = useState<string>( () => {
+    if ((challenge.length > 0) && !dictionarySets[props.language].has(challenge.join("|"))) {
+      setChallenge([]);
+      challengeError = true;
+    }
+    return challengeError
       ? `Invalid challenge string, playing random game.`
-      : `Make your first guess!`
+      : `Make your first guess!`}
   );
   const currentSeedParams = () =>
     `?seed=${seed}&length=${wordLength}&game=${gameNumber}`;
@@ -192,7 +190,6 @@ function Game(props: GameProps) {
       }
       setGuesses((guesses) => guesses.concat([currentGuess]));
       setCurrentGuess((guess) => []);
-
       const gameOver = (verbed: string) =>
         `You ${verbed}! The answer was ${target.join().toUpperCase()}. (Enter to ${
           challenge ? "play a random game" : "play again"

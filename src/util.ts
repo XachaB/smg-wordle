@@ -1,4 +1,5 @@
-import dictionary from "./dictionary.json";
+
+import nuer_words from "./nuer_words.json";
 
 export enum Difficulty {
   Normal,
@@ -9,7 +10,7 @@ export enum Difficulty {
 export const gameName = "hello wordl";
 export const maxGuesses = 6;
 
-export const dictionarySet: Set<string> = new Set(dictionary);
+export const dictionarySets: Record<string, Set<string>> = {"Nuer": new Set(nuer_words)};
 
 function mulberry32(a: number) {
   return function () {
