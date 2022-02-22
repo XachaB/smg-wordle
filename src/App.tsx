@@ -95,7 +95,7 @@ function App() {
           {seed ? "Random" : "Today's"}
         </a>
       </div>
-      {page === "about" && <About />}
+      {page === "about" && About(language) }
       {page === "settings" && (
         <div className="Settings">
             <div className="Settings-setting">

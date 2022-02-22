@@ -324,7 +324,7 @@ function Game(props: GameProps) {
         onKey={onKey}
       />
       <div className="Game-seed-info">
-        {challenge
+        {challenge.length
           ? "playing a challenge game"
           : seed
           ? `${describeSeed(seed)} — length ${wordLength}, game ${gameNumber}`
