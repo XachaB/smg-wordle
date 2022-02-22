@@ -272,7 +272,7 @@ function Game(props: GameProps) {
           id="wordLength"
           disabled={
             gameState === GameState.Playing &&
-            (guesses.length > 0 || currentGuess !== [] || challenge !== [])
+            (guesses.length > 0 || currentGuess.length > 0 || challenge.length > 0)
           }
           value={wordLength}
           onChange={(e) => {
