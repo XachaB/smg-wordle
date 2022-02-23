@@ -172,14 +172,23 @@ body.dark {
 body.dark .Game-keyboard-button {
   color: #404040;
 }
-
-a,
-a:visited {
+body.dark a,
+body.dark a:visited {
   color: #d4d4ff;
 }
 
-a:active {
+body.dark a:active {
   color: #dda5ff;
+}
+
+
+a,
+a:visited {
+  color: #8080ff;
+}
+
+a:active {
+  color: #cc77ff;
 }
 
 .Game-options {
