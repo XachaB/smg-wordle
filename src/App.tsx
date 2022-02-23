@@ -70,7 +70,7 @@ function App() {
 
   return (
     <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
-      <h1><img src="logo-main.png" alt="SMG" height="40px" className="logo"/>
+        <h1><a href={"https://www.smg.surrey.ac.uk/"}><img src="logo-main.png" alt="SMG" height="40px" className="logo"/></a>
           <span className="gametitle">{gameName[language]}</span>
       </h1>
       <div className="top-right">

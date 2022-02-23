@@ -1,5 +1,5 @@
 import { Clue, clueClass, CluedLetter, clueWord } from "./clue";
-
+import { ReactElement } from 'react';
 export enum RowState {
   LockedIn,
   Editing,
@@ -10,7 +10,7 @@ interface RowProps {
   rowState: RowState;
   wordLength: number;
   cluedLetters: CluedLetter[];
-  annotation?: string;
+  annotation?: ReactElement | null;
 }
 
 export function Row(props: RowProps) {
@@ -44,9 +44,12 @@ export function Row(props: RowProps) {
   if (isLockedIn) rowClass += " Row-locked-in";
   return (
     <tr className={rowClass}>
+        {(
+            <td className="Row-annotation"></td>
+        )}
       {letterDivs}
-      {props.annotation && (
-        <span className="Row-annotation">{props.annotation}</span>
+      {(
+        <td className="Row-annotation">{props.annotation}</td>
       )}
     </tr>
   );

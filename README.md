@@ -1,25 +1,6 @@
-# TODO
+# Nuerdle / Archidle : the SMG wordles
 
-- [x] Move keyboard selection logic to language selection logic
-- [x] Add nuer keyboard
-- [x] decouple letters in words vs chars (diacritics are part of a single letter) -- use a separator
-- [x] Merge targets  & dictionary
-- [x] Add Nuer dictionary
-- 
-- [] Restore letter slider
-- [] Add custom intros per languages + json
- Write something for Nuer speakers 
-- [] Change dictionary to a richer struture, with "hint" content and linking to our resources
-  - => spreadsheet, has the IDs // check for unique IDs
-  - long underscores: wrong character: replace by normal/short ones (as in the bible)
-  - generate links: https://www.nuerlexicon.com/search.php?id=422
-- [] Change the help page
-- [] Add archi keyboard
-- [] Add Archi dictionary
-
-# hello wordl
-
-It's [Wordle](https://www.powerlanguage.co.uk/wordle/) but you can play forever!
+It's [Wordle](https://www.powerlanguage.co.uk/wordle/) but for languages researched at the <a href="https://www.smg.surrey.ac.uk/">Surrey Morphology Group</a>.
 
 Play it [**here**](https://hellowordl.net/).
 

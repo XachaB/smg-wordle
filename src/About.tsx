@@ -5,7 +5,7 @@ import { maxGuesses } from "./util";
 export function About(language: string) {
 
     let words : Record<string, string[][]> = {
-        "Nuer":  [["r","i̲","e","t"], ["c","i","e","k"], ["t","i","e","l"]],
+        "Nuer":  [["r","i̲","e","t"], ["c","i","e","k"], ["t","i","e","m"]],
         "Archi": [["w", "o", "r", "d"], ["b","a","r","k"], ["d","a","r","t"]]
     }
 
@@ -15,8 +15,8 @@ export function About(language: string) {
             from the <a href="https://www.surrey.ac.uk/">University of Surrey</a> has been developing an <a href="https://www.nuerlexicon.com/">interactive online dictionary</a> for it,
             the first ever of its kind.</p><p>The words used in this puzzle have been taken from the <a href="https://find.bible/bibles/NUSBSS/">Nuer translation of the Bible</a>, and from the <a href="https://www.nuerlexicon.com/">Nuer Lexicon</a>.
         Any form of any word is a valid answer, so long as it is found in one of these sources. For example, rɔɔmä ‘of the sheep’,
-        tetdu ‘your hand’ and camkɛ ‘they eat’ are all possible five letter words.</p>),
-            "Archi": (<p>Some help text</p></div>),
+            tetdu ‘your hand’ and camkɛ ‘they eat’ are all possible five letter words. Whenever the word is in our lexicon, we provide a short definition and a link to the lexicon.</p></div>),
+            "Archi": (<div><p>Some help text</p></div>),
     }
     let word=words[language];
   return (
@@ -24,9 +24,9 @@ export function About(language: string) {
       <p>
         This is a {language} remake of the word game{" "}
         <a href="https://www.powerlanguage.co.uk/wordle/">
-          <i>Wordle</i>
+          <i>Wordle</i>, originally
         </a>{" "}
-          by <a href="https://twitter.com/powerlanguish">powerlanguage</a>, based on the open source version <a href="https://hellowordl.net/">Hello Wordl</a>.
+          by <a href="https://twitter.com/powerlanguish">powerlanguage</a>. This version was created by by <a href={"sacha.beniamine.net"}>Sacha Beniamine</a> based on the open source version <a href="https://hellowordl.net/">Hello Wordl</a>.
       </p>
       <hr />
         {help_texts[language]}
@@ -44,7 +44,7 @@ export function About(language: string) {
           { clue: Clue.Elsewhere, letter: word[0][3] },
 
         ]}
-        annotation={'"word"'}
+        annotation={<span>one correct letter</span>}
       />
       <p>
         <b>{word[0][0]}</b> and <b>{word[0][1]}</b> aren't in the target word.
@@ -61,7 +61,7 @@ export function About(language: string) {
           { clue: Clue.Correct, letter: word[1][2] },
           { clue: Clue.Absent, letter: word[1][3] },
         ]}
-        annotation={"So close!"}
+        annotation={<span>So close!</span>}
       />
       <Row
         rowState={RowState.LockedIn}
@@ -72,7 +72,7 @@ export function About(language: string) {
           { clue: Clue.Correct, letter: word[2][2] },
           { clue: Clue.Correct, letter: word[2][3] },
         ]}
-        annotation={"Got it!"}
+        annotation={<span>Got it!</span>}
       />
         <hr/>
       <p>

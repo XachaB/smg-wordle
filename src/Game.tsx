@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Row, RowState } from "./Row";
 import nuer_words from "./nuer_words.json";
+import nuer_annots from "./nuer_annots.json";
 import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
 import {
@@ -35,9 +36,11 @@ const maxLength = 11;
 const dictionnaries: Record<string, string[]> = {
   "Nuer": nuer_words,
 }
+const annotations: Record<string, Record<string, string[]>> = {
+  "Nuer": nuer_annots,
+}
 
 function randomTarget(wordLength: number, language: string): string[] {
-  console.log("picking random target...")
   const eligible = dictionnaries[language].filter((word) => word.length === wordLength + (wordLength-1));
   return pick(eligible).split("|");
 }
@@ -89,13 +92,11 @@ function Game(props: GameProps) {
   const [gameNumber, setGameNumber] = useState(parseUrlGameNumber());
   const [target, setTarget] = useState(() => {
     resetRng();
-    console.log("setting target... (game n°",gameNumber,")");
     // Skip RNG ahead to the parsed initial game number:
     for (let i = 1; i < gameNumber; i++) randomTarget(wordLength, props.language);
     let target_local = challenge.length ? challenge : randomTarget(wordLength, props.language);
     return target_local;
   });
-  console.log("target:", target);
   const [hint, setHint] = useState<string>( () => {
     if ((challenge.length > 0) && !dictionarySets[props.language].has(challenge.join("|"))) {
       setChallenge([]);
@@ -138,7 +139,7 @@ function Game(props: GameProps) {
     const url = seed
       ? window.location.origin + window.location.pathname + currentSeedParams()
       : getChallengeUrl(target);
-    const body = url + (text ? "\n\n" + text : "");
+    const body = "SMG wordle game\n" + url + (text ? "\n\n" + text : "");
     if (
       /android|iphone|ipad|ipod|webos/i.test(navigator.userAgent) &&
       !/firefox/i.test(navigator.userAgent)
@@ -168,7 +169,13 @@ function Game(props: GameProps) {
       return;
     }
     if (guesses.length === props.maxGuesses) return;
-    if (key === "Backspace") {
+    if (key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").length == 1) {
+
+      setCurrentGuess((guess) => guess.concat([key.toLowerCase()]).slice(0, wordLength));
+      tableRef.current?.focus();
+      setHint("");
+    }
+    else if (key === "Backspace") {
       setCurrentGuess((guess) => guess.slice(0, -1));
       setHint("");
     } else if (key === "Enter") {
@@ -195,7 +202,9 @@ function Game(props: GameProps) {
           challenge ? "play a random game" : "play again"
         })`;
 
-      if (currentGuess === target) {
+      console.log(currentGuess);
+      console.log(target);
+      if (currentGuess.join("") == target.join("")) {
         setHint(gameOver("won"));
         setGameState(GameState.Won);
       } else if (guesses.length + 1 === props.maxGuesses) {
@@ -205,12 +214,6 @@ function Game(props: GameProps) {
         setHint("");
         speak(describeClue(clue(currentGuess, target)));
       }
-    }
-    else {
-
-      setCurrentGuess((guess) => guess.concat([key.toLowerCase()]).slice(0, wordLength));
-      tableRef.current?.focus();
-      setHint("");
     }
   };
 
@@ -245,6 +248,13 @@ function Game(props: GameProps) {
           }
         }
       }
+      let infos = annotations[props.language];
+      const annot_vals = (guess.length > 0) && (infos.hasOwnProperty(guess.join(""))) ? infos[guess.join("")] : ["",""];
+      let annot = null;
+      if ((guess.length > 0) && infos.hasOwnProperty(guess.join(""))) {
+        let annot_vals = infos[guess.join("")];
+        annot = (<a href={annot_vals[1]} target="_blank" rel="noopener noreferrer">{annot_vals[0]}</a>);
+      }
       return (
         <Row
           key={i}
@@ -257,6 +267,7 @@ function Game(props: GameProps) {
               : RowState.Pending
           }
           cluedLetters={cluedLetters}
+          annotation={annot}
         />
       );
     });
@@ -289,7 +300,7 @@ function Game(props: GameProps) {
         ></input>
         <button
           style={{ flex: "0 0 auto" }}
-          disabled={gameState !== GameState.Playing || guesses.length === 0}
+          disabled={(gameState !== GameState.Playing) || (guesses.length === 0)}
           onClick={() => {
             setHint(
               `The answer was ${target.join("").toUpperCase()}. (Enter to play again)`
@@ -344,17 +355,21 @@ function Game(props: GameProps) {
               const emoji = props.colorBlind
                 ? ["⬛", "🟦", "🟧"]
                 : ["⬛", "🟨", "🟩"];
-              const score = gameState === GameState.Lost ? "X" : guesses.length;
+                  console.log(guesses
+                  .map((guess) =>
+                    clue(guess, target)
+                      .map((c) => emoji[c.clue ?? 0])
+                      .join("")
+                  ).join("\n"));
               share(
                 "Result copied to clipboard!",
-                `${gameName} ${score}/${props.maxGuesses}\n` +
-                  guesses
-                    .map((guess) =>
-                      clue(guess, target)
-                        .map((c) => emoji[c.clue ?? 0])
-                        .join("")
-                    )
-                    .join("\n")
+                decodeURIComponent(encodeURIComponent(guesses
+                  .map((guess) =>
+                    clue(guess, target)
+                      .map((c) => emoji[c.clue ?? 0])
+                      .join("")
+                  )
+                    .join("\n")))
               );
             }}
           >
@@ -362,6 +377,7 @@ function Game(props: GameProps) {
           </button>
         )}
       </p>
+      <div className="Game-extra-infos">Surrey Morphology Group: Nuer & Archi Wordle, 2020</div>
     </div>
   );
 }

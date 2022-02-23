@@ -10,14 +10,17 @@ body {
 .Row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
+  width:auto;
 }
 
 .Row-letter {
   margin: 2px;
   border: 2px solid rgba(128, 128, 128, 0.8);
   flex: 1;
+  width: 40px;
   max-width: 40px;
+  min-width: 40px;
   height: 40px;
   font-size: 28px;
   display: flex;
@@ -42,8 +45,18 @@ body {
 
 .Row-annotation {
   margin-inline-start: 16px;
-  width: 5em;
+  width: auto;
+  min-width:100px;
+  overflow: visible;
+  font-size:90%;
   text-align: start;
+}
+
+.Row-annotation a {
+  background-image:url(external-link-ltr-icon.svg);
+  background-position:center right;
+  background-repeat:no-repeat;
+  padding-right:13px
 }
 
 .App-container {
@@ -162,11 +175,11 @@ body.dark .Game-keyboard-button {
 
 a,
 a:visited {
-  color: #8080ff;
+  color: #d4d4ff;
 }
 
 a:active {
-  color: #cc77ff;
+  color: #dda5ff;
 }
 
 .Game-options {

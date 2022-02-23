@@ -8,7 +8,7 @@ interface KeyboardProps {
 
 export function Keyboard(props: KeyboardProps) {
   const layouts: Record<string, string> =
-      {"Nuer": "a|a̱|b|c|d|e|e̱|f|g|h|i|i̱|j-k|l|m|n|o|o̱|p|q|r|s|t|u|w-B|y|ä|ë|ö|ŋ|ɔ|ɔ̱|ɛ|ɛ̈|ɛ̱|ɛ̱̈|ɣ|E",
+      {"Nuer": "ŋ|w|e|e̱|ë|r|t|y|u|i|i̱|o|p-a|a̱|ä|ɛ|ɛ̈|ɛ̱̈|d|ɣ|g|h|j|k|l-B|ɔ|ɔ̱|c|b|n|o̱|ö|m|E",
       "Archi": "test-test-EtestB"};
   const keyboard = layouts[props.language]
     .split("-")
