@@ -1,5 +1,5 @@
 {
-  "name": "wordl",
+  "name": "smg-wordle",
   "version": "0.1.0",
   "homepage": "http://hellowordl.net/",
   "private": false,
@@ -44,7 +44,7 @@
       "last 1 safari version"
     ]
   },
-  "description": "It's [Wordle](https://www.powerlanguage.co.uk/wordle/) but you can play forever!",
+  "description": "It's [Wordle](https://www.powerlanguage.co.uk/wordle/) for the SMG databases !",
   "main": "index.js",
   "devDependencies": {},
   "repository": {
