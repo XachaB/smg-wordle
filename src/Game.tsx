@@ -385,7 +385,7 @@ function Game(props: GameProps) {
           </button>
         )}
       </p>
-      <div className="Game-extra-infos">Surrey Morphology Group: Nuer & Archi Wordle, 2020</div>
+      <div className="Game-extra-infos">Surrey Morphology Group: Nuer & Archi Wordle, 2022</div>
     </div>
   );
 }
