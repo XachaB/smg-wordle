@@ -1,7 +1,7 @@
 {
   "name": "smg-wordle",
   "version": "0.1.0",
-  "homepage": "http://hellowordl.net/",
+  "homepage": "https://xachab.github.io/smg-wordle/",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
@@ -49,12 +49,12 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/XachaB/hello-wordl.git"
+    "url": "git+https://xachab.github.io/smg-wordle/.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/XachaB/hello-wordl/issues"
+    "url": "https://xachab.github.io/smg-wordle/issues"
   }
 }
