@@ -129,7 +129,7 @@ function Game(props: GameProps) {
     }
     setChallenge([]);
     const newWordLength =
-      wordLength >= minLength && wordLength <= maxLength ? wordLength : 5;
+      wordLength >= minLength && wordLength <= maxLength ? wordLength : 4;
     setWordLength(newWordLength);
     setTarget(randomTarget(newWordLength, props.language));
     setHint("");
@@ -285,7 +285,7 @@ function Game(props: GameProps) {
       <div className="Game-options">
         <label htmlFor="wordLength">Letters:</label>
         <input
-          type="range"
+          type="number"
           min={minLength}
           max={maxLength}
           id="wordLength"
