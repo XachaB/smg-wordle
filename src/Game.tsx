@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Row, RowState } from "./Row";
 import nuer_words from "./nuer_words.json";
 import nuer_annots from "./nuer_annots.json";
+import archi_words from "./archi_words.json";
+import archi_annots from "./archi_annots.json";
 import { Clue, clue, describeClue, violation } from "./clue";
 import { Keyboard } from "./Keyboard";
 import {
@@ -35,9 +37,11 @@ const maxLength = 11;
 
 const dictionnaries: Record<string, string[]> = {
   "Nuer": nuer_words,
+  "Archi": archi_words,
 }
 const annotations: Record<string, Record<string, string[]>> = {
   "Nuer": nuer_annots,
+  "Archi": archi_annots,
 }
 
 function randomTarget(wordLength: number, language: string): string[] {
@@ -169,7 +173,7 @@ function Game(props: GameProps) {
       return;
     }
     if (guesses.length === props.maxGuesses) return;
-    if (key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").length == 1) {
+    if (key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").length < 3) {
 
       setCurrentGuess((guess) => guess.concat([key.toLowerCase()]).slice(0, wordLength));
       tableRef.current?.focus();
@@ -184,6 +188,10 @@ function Game(props: GameProps) {
         return;
       }
       if (!dictionnaries[props.language].includes(currentGuess.join("|"))) {
+        console.log(dictionnaries[props.language]);
+        console.log(currentGuess.join("|"));
+        console.log(dictionnaries[props.language].includes(currentGuess.join("|")));
+        console.log(target);
         setHint("Not a valid word");
         return;
       }

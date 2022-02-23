@@ -6,7 +6,7 @@ export function About(language: string) {
 
     let words : Record<string, string[][]> = {
         "Nuer":  [["r","i̲","e","t"], ["c","i","e","k"], ["t","i","e","m"]],
-        "Archi": [["w", "o", "r", "d"], ["b","a","r","k"], ["d","a","r","t"]]
+        "Archi": [["а", "в", "a", "л"], ["х","I","а","ж"], ["л","I","а","н"]]
     }
 
     let help_texts : Record<string, any> = {

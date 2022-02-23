@@ -9,7 +9,7 @@ interface KeyboardProps {
 export function Keyboard(props: KeyboardProps) {
   const layouts: Record<string, string> =
       {"Nuer": "ŋ|w|e|e̱|ë|r|t|y|u|i|i̱|o|p-a|a̱|ä|ɛ|ɛ̈|ɛ̱̈|d|ɣ|g|h|j|k|l-B|ɔ|ɔ̱|c|b|n|o̱|ö|m|E",
-      "Archi": "test-test-EtestB"};
+      "Archi": "Й|Ц|У|К|Е|Н|Г|Ш|Щ|З|Х|Ъ-І|В|А|П|Р|О|Л|Д|Ж-B|Ч|С|М|И|Т|Ь|Б|E"};
   const keyboard = layouts[props.language]
     .split("-")
     .map((row) =>
