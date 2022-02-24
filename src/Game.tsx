@@ -188,10 +188,6 @@ function Game(props: GameProps) {
         return;
       }
       if (!dictionnaries[props.language].includes(currentGuess.join("|"))) {
-        console.log(dictionnaries[props.language]);
-        console.log(currentGuess.join("|"));
-        console.log(dictionnaries[props.language].includes(currentGuess.join("|")));
-        console.log(target);
         setHint("Not a valid word");
         return;
       }
@@ -210,8 +206,6 @@ function Game(props: GameProps) {
           challenge ? "play a random game" : "play again"
         })`;
 
-      console.log(currentGuess);
-      console.log(target);
       if (currentGuess.join("") == target.join("")) {
         setHint(gameOver("won"));
         setGameState(GameState.Won);
@@ -363,12 +357,6 @@ function Game(props: GameProps) {
               const emoji = props.colorBlind
                 ? ["⬛", "🟦", "🟧"]
                 : ["⬛", "🟨", "🟩"];
-                  console.log(guesses
-                  .map((guess) =>
-                    clue(guess, target)
-                      .map((c) => emoji[c.clue ?? 0])
-                      .join("")
-                  ).join("\n"));
               share(
                 "Result copied to clipboard!",
                 decodeURIComponent(encodeURIComponent(guesses
