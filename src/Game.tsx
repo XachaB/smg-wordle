@@ -257,7 +257,7 @@ function Game(props: GameProps) {
         }
       }
       let infos = annotations[props.language];
-      const annot_vals = (guess.length > 0) && (infos.hasOwnProperty(guess.join(""))) ? infos[guess.join("")] : ["",""];
+      const annot_vals = (guess.length == wordLength) && (infos.hasOwnProperty(guess.join(""))) ? infos[guess.join("")] : ["",""];
       let annot = null;
       if ((guess.length > 0) && infos.hasOwnProperty(guess.join(""))) {
         let annot_vals = infos[guess.join("")];
