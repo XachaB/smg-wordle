@@ -223,8 +223,9 @@ a:active {
 .App-about b {
   background-color: #888;
   color: white;
-  padding: 1px 3px;
-  border-radius: 2px;
+  padding: 1px 7px;
+  font-size: 140%;
+  border-radius: 1px;
 }
 
 .App-about b.green-bg {
