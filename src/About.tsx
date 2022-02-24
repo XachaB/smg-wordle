@@ -76,7 +76,7 @@ export function About(language: string) {
         <hr/>
       <p>
         Report issues{" "}
-        <a href="https://github.com/lynn/hello-wordl/issues">here</a>.
+        <a href="https://github.com/xachab/smg-wordl/issues">here</a>.
       </p>
     </div>
   );
