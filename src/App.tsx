@@ -41,7 +41,8 @@ function App() {
   const [dark, setDark] = useSetting<boolean>("dark", prefersDark);
   const [colorBlind, setColorBlind] = useSetting<boolean>("colorblind", false);
   const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
-  const [language, setLanguage] = useSetting<string>("language", "Nuer");
+  const [language , setLanguage] = useSetting('language', 'Nuer');
+  const updateLanguage = (name: string):void => { setLanguage(name) }
 
   const gameName: Record<string, string> =
       {"Nuer": "Nuerdle",
@@ -98,18 +99,6 @@ function App() {
       {page === "about" && About(language) }
       {page === "settings" && (
         <div className="Settings">
-            <div className="Settings-setting">
-            <label htmlFor="language-setting">Language choice:</label>
-            <select
-              name="language-setting"
-              id="language-setting"
-              value={language}
-              onChange={(e) => setLanguage(e.target.value)}
-            >
-              <option value="Nuer">Nuer</option>
-              <option value="Archi">Archi</option>
-            </select>
-          </div>
           <div className="Settings-setting">
             <input
               id="dark-setting"
@@ -166,6 +155,7 @@ function App() {
         difficulty={difficulty}
         colorBlind={colorBlind}
         language={language}
+        updateLanguage={updateLanguage}
       />
     </div>
   );

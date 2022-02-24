@@ -24,12 +24,14 @@ enum GameState {
   Lost,
 }
 
+
 interface GameProps {
   maxGuesses: number;
   hidden: boolean;
   difficulty: Difficulty;
   colorBlind: boolean;
   language: string;
+  updateLanguage: (arg: string) => void
 }
 
 const minLength = 4;
@@ -84,7 +86,11 @@ function parseUrlGameNumber(): number {
   return gameNumber >= 1 && gameNumber <= 1000 ? gameNumber : 1;
 }
 
+
+
 function Game(props: GameProps) {
+
+
   const [gameState, setGameState] = useState(GameState.Playing);
   const [guesses, setGuesses] = useState<string[][]>([]);
   const [currentGuess, setCurrentGuess] = useState<string[]>([]);
@@ -98,8 +104,7 @@ function Game(props: GameProps) {
     resetRng();
     // Skip RNG ahead to the parsed initial game number:
     for (let i = 1; i < gameNumber; i++) randomTarget(wordLength, props.language);
-    let target_local = challenge.length ? challenge : randomTarget(wordLength, props.language);
-    return target_local;
+    return challenge.length ? challenge : randomTarget(wordLength, props.language);
   });
   const [hint, setHint] = useState<string>( () => {
     if ((challenge.length > 0) && !dictionarySets[props.language].has(challenge.join("|"))) {
@@ -206,7 +211,7 @@ function Game(props: GameProps) {
           challenge ? "play a random game" : "play again"
         })`;
 
-      if (currentGuess.join("") == target.join("")) {
+      if (currentGuess.join("") === target.join("")) {
         setHint(gameOver("won"));
         setGameState(GameState.Won);
       } else if (guesses.length + 1 === props.maxGuesses) {
@@ -251,7 +256,7 @@ function Game(props: GameProps) {
         }
       }
       let infos = annotations[props.language];
-      const annot_vals = (guess.length == wordLength) && (infos.hasOwnProperty(guess.join(""))) ? infos[guess.join("")] : ["",""];
+      const annot_vals = (guess.length === wordLength) && (infos.hasOwnProperty(guess.join(""))) ? infos[guess.join("")] : ["",""];
       let annot = null;
       if ((guess.length > 0) && infos.hasOwnProperty(guess.join(""))) {
         let annot_vals = infos[guess.join("")];
@@ -277,6 +282,19 @@ function Game(props: GameProps) {
   return (
     <div className="Game" style={{ display: props.hidden ? "none" : "block" }}>
       <div className="Game-options">
+         <label htmlFor="language-setting">Language:</label>
+            <select
+              name="language-setting"
+              id="language-setting"
+              value={props.language}
+              onChange={(e) => {
+                props.updateLanguage(e.target.value);
+                startNextGame();
+              }}
+            >
+              <option value="Nuer">Nuer</option>
+              <option value="Archi">Archi</option>
+            </select>
         <label htmlFor="wordLength">Letters:</label>
         <input
           type="number"
