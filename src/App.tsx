@@ -4,6 +4,7 @@ import Game from "./Game";
 import { useEffect, useState } from "react";
 import { About } from "./About";
 
+
 function useSetting<T>(
   key: string,
   initial: T
@@ -25,6 +26,13 @@ function useSetting<T>(
   };
   return [current, setSetting];
 }
+function getSetting<T>(key: string, initial: T){
+    function getter<T>(): T {
+        const item = window.localStorage.getItem(key);
+        return item ? JSON.parse(item) : initial;
+    }
+    return getter;
+}
 
 const now = new Date();
 const todaySeed =
@@ -41,9 +49,8 @@ function App() {
   const [dark, setDark] = useSetting<boolean>("dark", prefersDark);
   const [colorBlind, setColorBlind] = useSetting<boolean>("colorblind", false);
   const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
-  const [language , setLanguage] = useSetting('language', 'Nuer');
-  const updateLanguage = (name: string):void => { setLanguage(name) }
-
+  const [language , setLanguage] = useSetting<string>('language', 'Nuer');
+  const getLanguage = getSetting<string>('language', 'Nuer');
   const gameName: Record<string, string> =
       {"Nuer": "Nuerdle",
       "Archi": "Archidl"};
@@ -71,7 +78,7 @@ function App() {
 
   return (
     <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
-        <h1><a href={"https://www.smg.surrey.ac.uk/"}><img src="logo-main.png" alt="SMG" height="40px" className="logo"/></a>
+        <h1><a href={"https://www.smg.surrey.ac.uk/"}><img src={process.env.PUBLIC_URL + "/logo-main.png"} alt="SMG" height="40px" className="logo"/></a>
           <span className="gametitle">{gameName[language]}</span>
       </h1>
       <div className="top-right">
@@ -154,8 +161,8 @@ function App() {
         hidden={page !== "game"}
         difficulty={difficulty}
         colorBlind={colorBlind}
-        language={language}
-        updateLanguage={updateLanguage}
+        getLanguage={getLanguage}
+        updateLanguage={setLanguage}
       />
     </div>
   );

@@ -30,7 +30,7 @@ interface GameProps {
   hidden: boolean;
   difficulty: Difficulty;
   colorBlind: boolean;
-  language: string;
+  getLanguage: () => string;
   updateLanguage: (arg: string) => void
 }
 
@@ -103,11 +103,11 @@ function Game(props: GameProps) {
   const [target, setTarget] = useState(() => {
     resetRng();
     // Skip RNG ahead to the parsed initial game number:
-    for (let i = 1; i < gameNumber; i++) randomTarget(wordLength, props.language);
-    return challenge.length ? challenge : randomTarget(wordLength, props.language);
+    for (let i = 1; i < gameNumber; i++) randomTarget(wordLength, props.getLanguage());
+    return challenge.length ? challenge : randomTarget(wordLength, props.getLanguage());
   });
   const [hint, setHint] = useState<string>( () => {
-    if ((challenge.length > 0) && !dictionarySets[props.language].has(challenge.join("|"))) {
+    if ((challenge.length > 0) && !dictionarySets[props.getLanguage()].has(challenge.join("|"))) {
       setChallenge([]);
       challengeError = true;
     }
@@ -136,7 +136,7 @@ function Game(props: GameProps) {
     const newWordLength =
       wordLength >= minLength && wordLength <= maxLength ? wordLength : 4;
     setWordLength(newWordLength);
-    setTarget(randomTarget(newWordLength, props.language));
+    setTarget(randomTarget(newWordLength, props.getLanguage()));
     setHint("");
     setGuesses([]);
     setCurrentGuess([]);
@@ -192,7 +192,7 @@ function Game(props: GameProps) {
         setHint("Too short");
         return;
       }
-      if (!dictionnaries[props.language].includes(currentGuess.join("|"))) {
+      if (!dictionnaries[props.getLanguage()].includes(currentGuess.join("|"))) {
         setHint("Not a valid word");
         return;
       }
@@ -210,7 +210,9 @@ function Game(props: GameProps) {
         `You ${verbed}! The answer was ${target.join().toUpperCase()}. (Enter to ${
           challenge ? "play a random game" : "play again"
         })`;
-
+      console.log(currentGuess);
+      console.log(target);
+      console.log(currentGuess.join("") === target.join(""));
       if (currentGuess.join("") === target.join("")) {
         setHint(gameOver("won"));
         setGameState(GameState.Won);
@@ -255,7 +257,7 @@ function Game(props: GameProps) {
           }
         }
       }
-      let infos = annotations[props.language];
+      let infos = annotations[props.getLanguage()];
       const annot_vals = (guess.length === wordLength) && (infos.hasOwnProperty(guess.join(""))) ? infos[guess.join("")] : ["",""];
       let annot = null;
       if ((guess.length > 0) && infos.hasOwnProperty(guess.join(""))) {
@@ -286,9 +288,11 @@ function Game(props: GameProps) {
             <select
               name="language-setting"
               id="language-setting"
-              value={props.language}
+              value={props.getLanguage()}
               onChange={(e) => {
+                console.log("before:",props.getLanguage());
                 props.updateLanguage(e.target.value);
+                console.log("after:",props.getLanguage());
                 startNextGame();
               }}
             >
@@ -313,7 +317,7 @@ function Game(props: GameProps) {
             setGameState(GameState.Playing);
             setGuesses([]);
             setCurrentGuess([]);
-            setTarget(randomTarget(length, props.language));
+            setTarget(randomTarget(length, props.getLanguage()));
             setWordLength(length);
             setHint(`${length} letters`);
           }}
@@ -332,6 +336,9 @@ function Game(props: GameProps) {
           Give up
         </button>
       </div>
+      <p>
+        Find <a href={"https://www.nuerlexicon.com/"}>Nuer</a> or <a href={"https://www.smg.surrey.ac.uk/archi-dictionary/"}>Archi words</a> in the <a href={"https://www.smg.surrey.ac.uk/databases/"}>SMG databases</a>.
+      </p>
       <table
         className="Game-rows"
         tabIndex={0}
@@ -350,7 +357,7 @@ function Game(props: GameProps) {
         {hint || `\u00a0`}
       </p>
       <Keyboard
-        language={props.language}
+        language={props.getLanguage()}
         letterInfo={letterInfo}
         onKey={onKey}
       />
@@ -391,6 +398,7 @@ function Game(props: GameProps) {
           </button>
         )}
       </p>
+
       <div className="Game-extra-infos">Surrey Morphology Group: Nuer & Archi Wordle, 2022</div>
     </div>
   );
