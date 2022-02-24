@@ -11,14 +11,10 @@ export function About(language: string) {
 
     let help_texts : Record<string, any> = {
         "Nuer":  (<div><p>The Nuer language, also known as Thok Nath, is a West Nilotic language spoken by approximately 900,000 to two million people in South Sudan and Ethiopia,
-            as well as in diaspora communities throughout the world. The <a href="https://www.smg.surrey.ac.uk/">Surrey Morphology Group</a>
-            from the <a href="https://www.surrey.ac.uk/">University of Surrey</a> has been developing an <a href="https://www.nuerlexicon.com/">interactive online dictionary</a> for it,
+            as well as in diaspora communities throughout the world. The <a href="https://www.smg.surrey.ac.uk/">Surrey Morphology Group</a> from the <a href="https://www.surrey.ac.uk/">University of Surrey</a> has been developing an <a href="https://www.nuerlexicon.com/">interactive online dictionary</a> for it,
             the first ever of its kind.</p><p>The words used in this puzzle have been taken from the <a href="https://find.bible/bibles/NUSBSS/">Nuer translation of the Bible</a>, and from the <a href="https://www.nuerlexicon.com/">Nuer Lexicon</a>.
-        Any form of any word is a valid answer, so long as it is found in one of these sources. For example, rɔɔmä ‘of the sheep’,
-            tetdu ‘your hand’ and camkɛ ‘they eat’ are all possible five letter words. Whenever the word is in our lexicon, we provide a short definition and a link to the lexicon.</p></div>),
-            "Archi":  (<div><p>Archi is a Daghestanian language of the Lezgic group spoken by about 1200 people in Daghestan.
-  The <a href="https://www.smg.surrey.ac.uk/">Surrey Morphology Group</a>
-            from the <a href="https://www.surrey.ac.uk/">University of Surrey</a> has created a <a href="https://www.smg.surrey.ac.uk/archi-dictionary/">dictionary of Archi</a>.</p><p>The words used in this puzzle have been taken from this dictionnary.
+        Any form of any word is a valid answer, so long as it is found in one of these sources. For example, rɔɔmä ‘of the sheep’, tetdu ‘your hand’ and camkɛ ‘they eat’ are all possible five letter words. Whenever the word is in our lexicon, we provide a short definition and a link to the lexicon.</p></div>),
+            "Archi":  (<div><p>Archi is a Daghestanian language of the Lezgic group spoken by about 1200 people in Daghestan. The <a href="https://www.smg.surrey.ac.uk/">Surrey Morphology Group</a> from the <a href="https://www.surrey.ac.uk/">University of Surrey</a> has created a <a href="https://www.smg.surrey.ac.uk/archi-dictionary/">dictionary of Archi</a>.</p><p>The words used in this puzzle have been taken from this dictionnary.
         Any form of any word in the dictionnary is a valid answer. Links to the dictionnary entry are provided for valid words</p></div>),
     }
     let word=words[language];
