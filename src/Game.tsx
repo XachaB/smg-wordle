@@ -343,12 +343,6 @@ function Game(props: GameProps) {
                     Give up
                 </button>
             </div>
-            <p>
-                Need help ? Find <a
-                href={smg_databases[props.getLanguage()]}>{props.getLanguage()}</a> words
-                in the <a href={"https://www.smg.surrey.ac.uk/databases/"}>SMG
-                databases</a>.
-            </p>
             <table
                 className="Game-rows"
                 tabIndex={0}
@@ -410,8 +404,12 @@ function Game(props: GameProps) {
                 )}
             </p>
 
-            <div className="Game-extra-infos">Surrey Morphology Group: Nuer & Archi
-                Wordle, 2022
+            <div className="Game-extra-infos">
+                <p>Need help ? Find <a
+                href={smg_databases[props.getLanguage()]}>{props.getLanguage()}</a> words
+                in the <a href={"https://www.smg.surrey.ac.uk/databases/"}>SMG
+                databases</a>.
+            </p>
             </div>
         </div>
     );
