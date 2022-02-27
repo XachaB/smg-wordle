@@ -26,7 +26,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  text-transform: uppercase;
   font-weight: bold;
 }
 .Row-letter-color {
@@ -39,7 +38,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  text-transform: uppercase;
   font-weight: bold;
 }
 
