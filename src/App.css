@@ -262,7 +262,7 @@ a:active {
 }
 
 .Settings-setting input {
-  width: 18px;
+  width: auto;
   height: 18px;
 }
 
