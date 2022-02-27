@@ -37,6 +37,11 @@ interface GameProps {
 const minLength = 4;
 const maxLength = 11;
 
+const smg_databases: Record<string, string> = {
+  "Nuer": "https://www.nuerlexicon.com/",
+  "Archi": "https://www.smg.surrey.ac.uk/archi-dictionary"
+}
+
 const dictionnaries: Record<string, string[]> = {
   "Nuer": nuer_words,
   "Archi": archi_words,
@@ -336,7 +341,7 @@ function Game(props: GameProps) {
         </button>
       </div>
       <p>
-        Find <a href={"https://www.nuerlexicon.com/"}>Nuer</a> or <a href={"https://www.smg.surrey.ac.uk/archi-dictionary/"}>Archi words</a> in the <a href={"https://www.smg.surrey.ac.uk/databases/"}>SMG databases</a>.
+        Need help ? Find <a href={smg_databases[props.getLanguage()]}>{props.getLanguage()}</a> words in the <a href={"https://www.smg.surrey.ac.uk/databases/"}>SMG databases</a>.
       </p>
       <table
         className="Game-rows"

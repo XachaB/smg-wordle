@@ -133,6 +133,7 @@ table.Game-rows > tbody {
   text-decoration: inherit;
   border: 2px solid transparent;
   cursor: pointer;
+  min-width: 1.5em;
 }
 
 .Game-keyboard-button-wide {
