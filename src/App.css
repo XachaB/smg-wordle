@@ -315,3 +315,18 @@ a:active {
 }
 
 }
+
+
+@media screen and (max-width:360px) {
+
+body {
+  font-size:10pt;
+}
+
+.Game-keyboard-button,
+.Row-letter,
+.Row-letter-color {
+  font-size: 12pt;
+}
+
+}
