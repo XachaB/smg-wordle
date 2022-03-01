@@ -212,7 +212,7 @@ function Game(props: GameProps) {
             setGuesses((guesses) => guesses.concat([currentGuess]));
             setCurrentGuess((guess) => []);
             const gameOver = (verbed: string) =>
-                `You ${verbed}! The answer was ${target.join().toUpperCase()}. (Enter to ${
+                `You ${verbed}! The answer was ${target.join().toLowerCase()}. (Enter to ${
                     challenge ? "play a random game" : "play again"
                 })`;
             console.log(currentGuess);
