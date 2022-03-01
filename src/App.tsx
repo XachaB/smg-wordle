@@ -53,7 +53,7 @@ function App() {
     const [colorBlind, setColorBlind] = useSetting<boolean>("colorblind", false);
     const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
     const [language, setLanguage] = useSetting<string>('language', 'Nuer');
-    const getLanguage = getSetting<string>('language', 'Nuer');
+    const getLanguage = getSetting<string>('language', language);
     const gameName: Record<string, string> =
         {
             "Nuer": "Nuerdle",
