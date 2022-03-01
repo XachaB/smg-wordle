@@ -320,6 +320,9 @@ a:active {
 
 @media screen and (max-width:500px) {
 
+  #root {
+    margin: 0 .1em;
+  }
 .App-container {
   position: relative;
   max-width: 100%;
