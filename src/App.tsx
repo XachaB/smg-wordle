@@ -57,7 +57,7 @@ function App() {
     const gameName: Record<string, string> =
         {
             "Nuer": "Nuerdle",
-            "Archi": "Archidl"
+            "Archi": "Archidle"
         };
     useEffect(() => {
         document.body.className = dark ? "dark" : "";
