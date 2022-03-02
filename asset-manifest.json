@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/smg-wordle/static/css/main.f481ef2f.css",
-    "main.js": "/smg-wordle/static/js/main.5b86a6d2.js",
+    "main.css": "/smg-wordle/static/css/main.2b8c2df1.css",
+    "main.js": "/smg-wordle/static/js/main.21e823b0.js",
     "static/media/external-link-ltr-icon.svg": "/smg-wordle/static/media/external-link-ltr-icon.30601312fbee00af1a54.svg",
     "index.html": "/smg-wordle/index.html",
-    "main.f481ef2f.css.map": "/smg-wordle/static/css/main.f481ef2f.css.map",
-    "main.5b86a6d2.js.map": "/smg-wordle/static/js/main.5b86a6d2.js.map"
+    "main.2b8c2df1.css.map": "/smg-wordle/static/css/main.2b8c2df1.css.map",
+    "main.21e823b0.js.map": "/smg-wordle/static/js/main.21e823b0.js.map"
   },
   "entrypoints": [
-    "static/css/main.f481ef2f.css",
-    "static/js/main.5b86a6d2.js"
+    "static/css/main.2b8c2df1.css",
+    "static/js/main.21e823b0.js"
   ]
 }
