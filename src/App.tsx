@@ -1,9 +1,8 @@
 import "./App.css";
-import {maxGuesses, seed, urlParam} from "./util";
+import {maxGuesses, urlParam} from "./util";
 import Game from "./Game";
 import {useEffect, useState} from "react";
 import {About} from "./About";
-
 
 function useSetting<T>(
     key: string,
@@ -28,21 +27,11 @@ function useSetting<T>(
     return [current, setSetting];
 }
 
-function getSetting<T>(key: string, initial: T) {
-    function getter<T>(): T {
-        const item = window.localStorage.getItem(key);
-        return item ? JSON.parse(item) : initial;
-    }
-
-    return getter;
+function parseUrlLanguage(): string {
+    const langParam = urlParam("language");
+    const lang = langParam === "Archi" || langParam === "Nuer" ? langParam : "Nuer";
+    return lang;
 }
-
-const now = new Date();
-const todaySeed =
-  now.toLocaleDateString("en-US", { year: "numeric" }) +
-  now.toLocaleDateString("en-US", { month: "2-digit" }) +
-  now.toLocaleDateString("en-US", { day: "2-digit" });
-
 function App() {
     type Page = "game" | "about" | "settings";
     const [page, setPage] = useState<Page>("game");
@@ -52,8 +41,7 @@ function App() {
     const [dark, setDark] = useSetting<boolean>("dark", prefersDark);
     const [colorBlind, setColorBlind] = useSetting<boolean>("colorblind", false);
     const [difficulty, setDifficulty] = useSetting<number>("difficulty", 0);
-    const [language, setLanguage] = useSetting<string>('language', 'Nuer');
-    const getLanguage = getSetting<string>('language', language);
+    const [language, setLanguage] = useState(parseUrlLanguage());
     const gameName: Record<string, string> =
         {
             "Nuer": "Nuerdle",
@@ -61,9 +49,6 @@ function App() {
         };
     useEffect(() => {
         document.body.className = dark ? "dark" : "";
-        if (urlParam("today") !== null || urlParam("todas") !== null) {
-            document.location = "?seed=" + todaySeed;
-        }
         setTimeout(() => {
             // Avoid transition on page load
             document.body.style.transition = "0.3s background-color ease-out";
@@ -84,15 +69,6 @@ function App() {
     return (
         <div className={"App-container" + (colorBlind ? " color-blind" : "")}>
             <div id="header">
-                <div
-                    style={{
-                        visibility: page === "game" ? "visible" : "hidden",
-                    }}
-                >
-                    <a href={seed ? "?random" : "?seed=" + todaySeed}>
-                        {seed ? "Random" : "Today's"}
-                    </a>
-                </div>
                 <h1><a href={"https://www.smg.surrey.ac.uk/"}><img
                     src={process.env.PUBLIC_URL + "/logo-main.png"} alt="SMG"
                     className="logo"/></a>
@@ -168,8 +144,8 @@ function App() {
                 hidden={page !== "game"}
                 difficulty={difficulty}
                 colorBlind={colorBlind}
-                getLanguage={getLanguage}
-                updateLanguage={setLanguage}
+                language={language}
+                setLanguage={setLanguage}
             />
         </div>
     );
