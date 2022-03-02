@@ -239,6 +239,10 @@ a:active {
   line-height: 1.4;
 }
 
+.App-about p {
+  text-align: justify;
+}
+
 .App-about b {
   background-color: #888;
   color: white;
