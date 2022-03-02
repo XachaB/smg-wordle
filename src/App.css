@@ -59,7 +59,7 @@ margin:0 2em;
   text-align: start;
 }
 
-.Row-annotation a {
+.Row-annotation a, .hint a {
   background-image:url(external-link-ltr-icon.svg);
   background-position:center right;
   background-repeat:no-repeat;
@@ -86,7 +86,7 @@ margin:0 2em;
 }
 .App-container h1 {
   margin-top: 0;
-  font-family: Roboto Black, "DejaVu Sans", SansSerif;
+  font-family: Roboto Black, "DejaVu Sans", sans-serif;
 }
 
 .Game,

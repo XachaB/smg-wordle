@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {ReactElement, useEffect, useRef, useState} from "react";
 import {Row, RowState} from "./Row";
 import nuer_words from "./nuer_words.json";
 import nuer_annots from "./nuer_annots.json";
@@ -48,6 +48,18 @@ const annotations: Record<string, Record<string, string[]>> = {
 }
 
 
+function gameOver(verbed: string, target: string[], language: string): ReactElement {
+    let infos = annotations[language];
+    let target_word = target.join("");
+    let annot = (<span>no translation available</span>);
+    if (infos.hasOwnProperty(target_word)) {
+        let annot_vals = infos[target_word];
+        annot = (<a href={annot_vals[1]} target="_blank"
+                    rel="noopener noreferrer">{annot_vals[0]}</a>);
+    }
+    let sentence = `You ${verbed}! The answer was ${target_word}`
+    return (<span className="hint">{sentence} ({annot})</span>);
+}
 
 function randomTarget(wordLength: number, language: string): string[] {
     const eligible: string[] = dictionnaries[language].filter((word) => word.length === wordLength + (wordLength - 1));
@@ -74,7 +86,7 @@ function Game(props: GameProps) {
                 window.location.pathname + `?length=${wordLength}&language=${props.language}`
             );
     }, [wordLength, props.language]);
-    const [hint, setHint] = useState<string>(() => `Make your first guess!`);
+    const [hint, setHint] = useState<ReactElement | null>(() => (<span className="hint">Make your first guess!</span>));
     const [target, setTarget] = useState(() => randomTarget(wordLength, props.language));
     const tableRef = useRef<HTMLTableElement>(null);
 
@@ -94,12 +106,12 @@ function Game(props: GameProps) {
         }
         try {
             await navigator.clipboard.writeText(body);
-            setHint(copiedHint);
+            setHint( (<span className="hint">{copiedHint}</span>));
             return;
         } catch (e) {
             console.warn("navigator.clipboard.writeText failed:", e);
         }
-        setHint(url);
+        setHint((<span className="hint">{url}</span>));
     }
 
     const onKey = (key: string) => {
@@ -108,39 +120,37 @@ function Game(props: GameProps) {
 
             setCurrentGuess((guess) => guess.concat([key.toLowerCase()]).slice(0, wordLength));
             tableRef.current?.focus();
-            setHint("");
+            setHint(null);
         } else if (key === "Backspace") {
             setCurrentGuess((guess) => guess.slice(0, -1));
-            setHint("");
+            setHint(null);
         } else if (key === "Enter") {
             if (currentGuess.length !== wordLength) {
-                setHint("Too short");
+                setHint((<span className="hint">Too short</span>));
                 return;
             }
             if (!dictionnaries[props.language].includes(currentGuess.join("|"))) {
-                setHint("Not a valid word");
+                setHint((<span className="hint">Not a valid word</span>));
                 return;
             }
             for (const g of guesses) {
                 const c = clue(g, target);
                 const feedback = violation(props.difficulty, c, currentGuess);
                 if (feedback) {
-                    setHint(feedback);
+                    setHint((<span className="hint">{feedback}</span>));
                     return;
                 }
             }
             setGuesses((guesses) => guesses.concat([currentGuess]));
             setCurrentGuess([]);
-            const gameOver = (verbed: string) =>
-                `You ${verbed}! The answer was ${target.join("").toLowerCase()}.`;
             if (currentGuess.join("") === target.join("")) {
-                setHint(gameOver("won"));
+                setHint(gameOver("won", target, props.language));
                 setGameState(GameState.Won);
             } else if (guesses.length + 1 === props.maxGuesses) {
-                setHint(gameOver("lost"));
+                setHint(gameOver("lost", target, props.language));
                 setGameState(GameState.Lost);
             } else {
-                setHint("");
+                setHint(null);
                 speak(describeClue(clue(currentGuess, target)));
             }
         }
@@ -215,7 +225,7 @@ function Game(props: GameProps) {
                         setCurrentGuess([]);
                         setTarget(randomTarget(wordLength, new_language));
                         props.setLanguage(new_language);
-                        setHint(`Play ${new_language} words`);
+                        setHint((<span className="hint">Play {new_language} words</span>));
                     }}
                 >
                     <option value="Nuer">Nuer</option>
@@ -237,7 +247,7 @@ function Game(props: GameProps) {
                         setCurrentGuess([]);
                         setTarget(randomTarget(length, props.language));
                         setWordLength(length);
-                        setHint(`${length} letters`);
+                        setHint((<span className="hint">{length} letters</span>));
                     }}
                 >
                     {wordlengths.map((val, i) => {
@@ -249,9 +259,7 @@ function Game(props: GameProps) {
                     style={{flex: "0 0 auto"}}
                     disabled={(gameState !== GameState.Playing) || (guesses.length === 0)}
                     onClick={() => {
-                        setHint(
-                            `The answer was ${target.join("").toLowerCase()}.`
-                        );
+                        setHint(gameOver("lost", target, props.language));
                         setGameState(GameState.Lost);
                         (document.activeElement as HTMLElement)?.blur();
                     }}
@@ -269,10 +277,6 @@ function Game(props: GameProps) {
             </table>
             <p
                 role="alert"
-                style={{
-                    userSelect: /https?:/.test(hint) ? "text" : "none",
-                    whiteSpace: "pre-wrap",
-                }}
             >
                 {hint || `\u00a0`}
             </p>
