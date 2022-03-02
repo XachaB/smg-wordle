@@ -72,8 +72,8 @@ export function violation(
     const clueCount = clues.filter(
       (c) => c.letter === letter && c.clue !== Clue.Absent
     ).length;
-    const guessCount = guess.length - 1;
-    const glyph = letter.toUpperCase();
+    const guessCount = guess.filter(g => g === letter).length;
+    const glyph = letter;
     const glyphs = glyph + (clueCount !== 1 ? "s" : "");
     const nth = ordinal(i + 1);
 

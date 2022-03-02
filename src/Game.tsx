@@ -215,9 +215,6 @@ function Game(props: GameProps) {
                 `You ${verbed}! The answer was ${target.join().toLowerCase()}. (Enter to ${
                     challenge ? "play a random game" : "play again"
                 })`;
-            console.log(currentGuess);
-            console.log(target);
-            console.log(currentGuess.join("") === target.join(""));
             if (currentGuess.join("") === target.join("")) {
                 setHint(gameOver("won"));
                 setGameState(GameState.Won);
@@ -294,9 +291,7 @@ function Game(props: GameProps) {
                     id="language-setting"
                     value={props.getLanguage()}
                     onChange={(e) => {
-                        console.log("before:", props.getLanguage());
                         props.updateLanguage(e.target.value);
-                        console.log("after:", props.getLanguage());
                         startNextGame();
                     }}
                 >
