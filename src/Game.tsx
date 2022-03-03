@@ -91,7 +91,7 @@ function Game(props: GameProps) {
     const tableRef = useRef<HTMLTableElement>(null);
 
     async function share(copiedHint: string, text?: string) {
-        const url = window.location.pathname + `?length=${wordLength}&language=${props.language}`;
+        const url = window.location.origin + `?length=${wordLength}&language=${props.language}`;
         const body = "SMG wordle game\n" + url + (text ? "\n\n" + text : "");
         if (
             /android|iphone|ipad|ipod|webos/i.test(navigator.userAgent) &&
