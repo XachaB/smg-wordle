@@ -80,10 +80,15 @@ margin:0 2em;
   width: auto;
   padding: 1em 5% 0 5%;
   margin: 0 0 1em 0;
-  height: 85px;
+  height: 5.5em;
   text-align: left;
   border-bottom: 1em solid black;
 }
+
+#surrey-integration img {
+  height: 3em;
+}
+
 .App-container h1 {
   margin-top: 0;
   font-family: Roboto Black, "DejaVu Sans", sans-serif;
@@ -94,7 +99,7 @@ h1 {
   user-select: none;
   display: flex;
   align-items:center;
-  margin:0 auto 20px auto;
+  margin:0 auto .5em auto;
 }
 
 h1 img.logo {
@@ -237,6 +242,7 @@ a:active {
 .App-about {
   margin-top: -1rem;
   line-height: 1.4;
+  padding: 0 .5em;
 }
 
 .App-about p {
@@ -278,6 +284,7 @@ a:active {
 .Settings {
   text-align: left;
   font-size: 18px;
+  padding: 0 .5em;
 }
 
 .Settings-setting {
@@ -325,7 +332,7 @@ a:active {
 @media screen and (max-width:500px) {
 
   #root {
-    margin: 0 .1em;
+    margin: 0 .5em;
   }
 .App-container {
   position: relative;
@@ -334,6 +341,29 @@ a:active {
   flex-direction: column;
   margin: 0;
   justify-content: center;
+}
+
+body {
+  font-size:11pt;
+}
+
+.Game-keyboard-button,
+.Row-letter,
+.Row-letter-color {
+  font-size: 12pt;
+}
+
+.Settings-setting input#difficulty-setting {
+  width: 4em;
+}
+
+#surrey-integration {
+  padding: .5em 5% 0 5%;
+  height: 4em;
+}
+
+#surrey-integration img {
+  height: 2em;
 }
 
 }
@@ -348,7 +378,7 @@ body {
 .Game-keyboard-button,
 .Row-letter,
 .Row-letter-color {
-  font-size: 12pt;
+  font-size: 11pt;
 }
 
 }
