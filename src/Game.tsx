@@ -350,7 +350,7 @@ function Game(props: GameProps) {
                     ariaLabelShowText="Click here for some ideas"
                     ariaLabelHideText="To hide spoiler text again click here."
                     hiddenColor="currentColor"
-                    revealedColor="#ddd"
+                    revealedColor="transparent"
                 >
                     {examples.map((word, i) => {
 

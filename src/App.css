@@ -332,8 +332,11 @@ a:active {
   background-color: #85c0f9;
 }
 
-._2FKZL .suggestion a {
-  color: black;
+._2FKZL .suggestion a,
+._2FKZL .suggestion a:active,
+._2FKZL .suggestion a:hover,
+._2FKZL .suggestion a:visited  {
+  color: inherit;
   pointer-events: none;
   background-image:none;
 }
