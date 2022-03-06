@@ -86,7 +86,8 @@ function gameOver(verbed: string, target: string[], language: string): ReactElem
 }
 
 function randomTarget(wordLength: number, language: string): string[] {
-    const eligible: string[] = dictionnaries[language].filter((word) => word.length === wordLength + (wordLength - 1));
+    const eligible: string[] = dictionnaries[language].filter((word) => word.length === wordLength + (wordLength - 1)
+     && annotations[language].hasOwnProperty(word.split("|").join("")));
     return pickToday<string>(eligible).split("|");
 }
 
