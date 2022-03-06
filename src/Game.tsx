@@ -92,7 +92,7 @@ function Game(props: GameProps) {
 
     async function share(copiedHint: string, text?: string) {
         const url = window.location.origin + `?length=${wordLength}&language=${props.language}`;
-        const body = "SMG wordle game\n" + url + (text ? "\n\n" + text : "");
+        const body = `SMG wordle game for the ${props.language} language\n` + url + (text ? "\n\n" + text : "");
         if (
             /android|iphone|ipad|ipod|webos/i.test(navigator.userAgent) &&
             !/firefox/i.test(navigator.userAgent)

@@ -7,17 +7,32 @@ export enum Difficulty {
 export const gameName = "SMG Wordle";
 export const maxGuesses = 6;
 
+
+function mulberry32(a: number) {
+  return function () {
+    var t = (a += 0x6d2b79f5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 export function urlParam(name: string): string | null {
     return new URLSearchParams(window.location.search).get(name);
 }
 
-export function pick<T>(array: Array<T>): T {
+function dateRandom(i: number): number {
     const now = new Date();
-    const todaySeed =
+    now.setDate(now.getDate() + i)
+    const seed =
         now.toLocaleDateString("en-US", {year: "numeric"}) +
         now.toLocaleDateString("en-US", {month: "2-digit"}) +
         now.toLocaleDateString("en-US", {day: "2-digit"});
-    return array[Number(todaySeed) % array.length]
+    return mulberry32(Number(seed))()
+}
+
+export function pick<T>(array: Array<T>): T {
+  return array[Math.floor(array.length * dateRandom(0))];
 }
 
 // https://a11y-guidelines.orange.com/en/web/components-examples/make-a-screen-reader-talk/
@@ -42,7 +57,7 @@ export function speak(
 }
 
 export function ordinal(n: number): string {
-    return n + ([, "st", "nd", "rd"][(n % 100 >> 3) ^ 1 && n % 10] || "th");
+    return n + (["", "st", "nd", "rd"][(n % 100 >> 3) ^ 1 && n % 10] || "th");
 }
 
 export const englishNumbers =
