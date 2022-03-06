@@ -142,6 +142,9 @@ function Game(props: GameProps) {
 
     const onKey = (key: string) => {
         if (guesses.length === props.maxGuesses) return;
+        if (gameState != GameState.Playing){
+            return;
+        }
         if (key.normalize("NFD").replace(/[\u0300-\u036f]/g, "").length < 3) {
 
             setCurrentGuess((guess) => guess.concat([key.toLowerCase()]).slice(0, wordLength));
