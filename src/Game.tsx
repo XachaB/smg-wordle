@@ -82,7 +82,7 @@ function translationLink(w: string[], language: string, nullDefault: boolean): R
 
 function gameOver(verbed: string, target: string[], language: string): ReactElement {
     let annot = translationLink(target, language, false);
-    return (<span className="hint">You ${verbed} ! The answer was <span className="word">{target.join("")}</span> ({annot})</span>);
+    return (<span className="hint">You {verbed} ! The answer was <span className="word">{target.join("")}</span> ({annot})</span>);
 }
 
 function randomTarget(wordLength: number, language: string): string[] {
