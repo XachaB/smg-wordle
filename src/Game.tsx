@@ -1,4 +1,5 @@
-import {ReactElement, useEffect, useRef, useState} from "react";
+import {memo, ReactElement, useEffect, useMemo, useRef, useState} from "react";
+import {Spoiler} from "react-spoiler-tag";
 import {Row, RowState} from "./Row";
 import nuer_words from "./nuer_words.json";
 import nuer_annots from "./nuer_annots.json";
@@ -6,12 +7,7 @@ import archi_words from "./archi_words.json";
 import archi_annots from "./archi_annots.json";
 import {Clue, clue, describeClue, violation} from "./clue";
 import {Keyboard} from "./Keyboard";
-import {
-    Difficulty,
-    pick,
-    speak,
-    urlParam
-} from "./util";
+import {Difficulty, hashCode, mulberry32, pick, pickToday, speak, urlParam} from "./util";
 
 enum GameState {
     Playing,
@@ -47,23 +43,51 @@ const annotations: Record<string, Record<string, string[]>> = {
     "Archi": archi_annots,
 }
 
+function getExamples(target: string[], language: string, wordLength: number, numExamples: number): string[][] {
+    // Words of the correct length, in the appropriate language, with translations
+    const eligible: string[] = dictionnaries[language].filter((word) => {
+            let w = word.split("|");
+            return (w.length === wordLength) && annotations[language].hasOwnProperty(w.join(""))
+        }
+    );
+    let random = mulberry32(hashCode(target.join("")));
+    let result = [];
+    let known_chars = new Set<string>();
+    while (result.length < numExamples) {
+        let w = pick<string>(eligible, random()).split("|");
+        let common = w.map((c) => Number(known_chars.has(c))).reduce((a, b) => a + b, 0);
+        if (common < (wordLength / 2)) {
+            result.push(w);
+            w.forEach(c => known_chars.add(c));
+        }
+    }
+    console.log("Regenerated examples");
+    return result
+}
+
+function translationLink(w: string[], language: string, nullDefault: boolean): ReactElement | null {
+    let infos = annotations[language];
+    let word = w.join("");
+    if (infos.hasOwnProperty(word)) {
+        let annot_vals = infos[word];
+        return (<a href={annot_vals[1]} target="_blank"
+                   rel="noopener noreferrer">{annot_vals[0]}</a>)
+    }
+    if (nullDefault) {
+        return null
+    }
+    return (<span className="no-translation">no translation available</span>)
+}
+
 
 function gameOver(verbed: string, target: string[], language: string): ReactElement {
-    let infos = annotations[language];
-    let target_word = target.join("");
-    let annot = (<span>no translation available</span>);
-    if (infos.hasOwnProperty(target_word)) {
-        let annot_vals = infos[target_word];
-        annot = (<a href={annot_vals[1]} target="_blank"
-                    rel="noopener noreferrer">{annot_vals[0]}</a>);
-    }
-    let sentence = `You ${verbed}! The answer was ${target_word}`
-    return (<span className="hint">{sentence} ({annot})</span>);
+    let annot = translationLink(target, language, false);
+    return (<span className="hint">You ${verbed} ! The answer was <span className="word">{target.join("")}</span> ({annot})</span>);
 }
 
 function randomTarget(wordLength: number, language: string): string[] {
     const eligible: string[] = dictionnaries[language].filter((word) => word.length === wordLength + (wordLength - 1));
-    return pick<string>(eligible).split("|");
+    return pickToday<string>(eligible).split("|");
 }
 
 function parseUrlLength(): number {
@@ -80,13 +104,14 @@ function Game(props: GameProps) {
     const [currentGuess, setCurrentGuess] = useState<string[]>([]);
     const [wordLength, setWordLength] = useState(parseUrlLength());
     useEffect(() => {
-            window.history.replaceState(
-                {},
-                document.title,
-                window.location.pathname + `?length=${wordLength}&language=${props.language}`
-            );
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname + `?length=${wordLength}&language=${props.language}`
+        );
     }, [wordLength, props.language]);
-    const [hint, setHint] = useState<ReactElement | null>(() => (<span className="hint">Make your first guess!</span>));
+    const [hint, setHint] = useState<ReactElement | null>(() => (
+        <span className="hint">Make your first guess!</span>));
     const [target, setTarget] = useState(() => randomTarget(wordLength, props.language));
     const tableRef = useRef<HTMLTableElement>(null);
 
@@ -106,7 +131,7 @@ function Game(props: GameProps) {
         }
         try {
             await navigator.clipboard.writeText(body);
-            setHint( (<span className="hint">{copiedHint}</span>));
+            setHint((<span className="hint">{copiedHint}</span>));
             return;
         } catch (e) {
             console.warn("navigator.clipboard.writeText failed:", e);
@@ -172,6 +197,7 @@ function Game(props: GameProps) {
     }, [currentGuess, gameState]);
 
     let letterInfo = new Map<string, Clue>();
+
     const tableRows = Array(props.maxGuesses)
         .fill(undefined)
         .map((_, i) => {
@@ -187,12 +213,10 @@ function Game(props: GameProps) {
                     }
                 }
             }
-            let infos = annotations[props.language];
+
             let annot = null;
-            if ((guess.length === wordLength) && infos.hasOwnProperty(guess.join(""))) {
-                let annot_vals = infos[guess.join("")];
-                annot = (<a href={annot_vals[1]} target="_blank"
-                            rel="noopener noreferrer">{annot_vals[0]}</a>);
+            if ((guess.length === wordLength)) {
+                annot = translationLink(guess, props.language, true);
             }
             return (
                 <Row
@@ -210,6 +234,8 @@ function Game(props: GameProps) {
                 />
             );
         });
+    const examples = useMemo( () => getExamples(target, props.language, wordLength, 6),
+        [target, props.language, wordLength]);
     return (
         <div className="Game" style={{display: props.hidden ? "none" : "block"}}>
             <div className="Game-options">
@@ -225,7 +251,8 @@ function Game(props: GameProps) {
                         setCurrentGuess([]);
                         setTarget(randomTarget(wordLength, new_language));
                         props.setLanguage(new_language);
-                        setHint((<span className="hint">Play {new_language} words</span>));
+                        setHint((
+                            <span className="hint">Play {new_language} words</span>));
                     }}
                 >
                     <option value="Nuer">Nuer</option>
@@ -251,7 +278,8 @@ function Game(props: GameProps) {
                     }}
                 >
                     {wordlengths.map((val, i) => {
-                       return  (<option value={val} key={"length_" + i.toString()}>{val}</option>);
+                        return (<option value={val}
+                                        key={"length_" + i.toString()}>{val}</option>);
                     })
                     }
                 </select>
@@ -318,11 +346,25 @@ function Game(props: GameProps) {
             </p>
 
             <div className="Game-extra-infos">
-                <p>Need help ? Find <a
-                href={smg_databases[props.language]}>{props.language}</a> words
-                in the <a href={"https://www.smg.surrey.ac.uk/databases/"}>SMG
-                databases</a>.
-            </p>
+                <p>Need help ? Try one of these: <Spoiler
+                    ariaLabelShowText="Click here for some ideas"
+                    ariaLabelHideText="To hide spoiler text again click here."
+                    hiddenColor="currentColor"
+                    revealedColor="#ddd"
+                >
+                    {examples.map((word, i) => {
+
+                        let translation = translationLink(word, props.language, true);
+                        let key = "suggestion-" + i.toString();
+                        let sep = i < (examples.length - 1) ? "; " : "";
+                        return (<span className="suggestion" key={key}> <span
+                            className="word">{word.join("")}</span> ({translation}){sep}</span>)
+                    })}
+                </Spoiler>.</p>
+                    <p>Find more <a
+                        href={smg_databases[props.language]}>{props.language}</a> words
+                    in the <a href={"https://www.smg.surrey.ac.uk/databases/"}>SMG
+                            databases</a>.</p>
             </div>
         </div>
     );

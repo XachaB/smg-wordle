@@ -7,10 +7,15 @@ export enum Difficulty {
 export const gameName = "SMG Wordle";
 export const maxGuesses = 6;
 
+export function hashCode(s: string): number {
+    for(var i = 0, h = 0; i < s.length; i++)
+        h = Math.imul(31, h) + s.charCodeAt(i) | 0;
+    return h;
+}
 
-function mulberry32(a: number) {
+export function mulberry32(a: number) {
   return function () {
-    var t = (a += 0x6d2b79f5);
+    let t = (a += 0x6d2b79f5);
     t = Math.imul(t ^ (t >>> 15), t | 1);
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
@@ -31,9 +36,15 @@ function dateRandom(i: number): number {
     return mulberry32(Number(seed))()
 }
 
-export function pick<T>(array: Array<T>): T {
-  return array[Math.floor(array.length * dateRandom(0))];
+
+export function pick<T>(array: Array<T>, seed: number): T {
+  return array[Math.floor(array.length * seed)];
+
 }
+export function pickToday<T>(array: Array<T>): T {
+  return pick<T>(array, dateRandom(0))
+}
+
 
 // https://a11y-guidelines.orange.com/en/web/components-examples/make-a-screen-reader-talk/
 export function speak(

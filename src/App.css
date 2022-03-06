@@ -59,7 +59,7 @@ margin:0 2em;
   text-align: start;
 }
 
-.Row-annotation a, .hint a {
+.Row-annotation a, .hint a, .suggestion a {
   background-image:url(external-link-ltr-icon.svg);
   background-position:center right;
   background-repeat:no-repeat;
@@ -329,11 +329,24 @@ a:active {
   background-color: #85c0f9;
 }
 
+._2FKZL a {
+  color: black;
+  pointer-events: none;
+}
+
+.word {
+  font-size: 120%;
+}
+.spoiler-text {
+  cursor: pointer;
+}
 @media screen and (max-width:500px) {
 
   #root {
     margin: 0 .5em;
   }
+
+
 .App-container {
   position: relative;
   max-width: 100%;

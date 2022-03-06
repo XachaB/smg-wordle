@@ -21,17 +21,17 @@ export function About(language: string) {
   return (
     <div className="App-about">
       <p>
-        This is a {language} remake of the word game{" "}
+        This is a remake in {language} of the word game{" "}
         <a href="https://www.powerlanguage.co.uk/wordle/">
           <i>Wordle</i>, originally
         </a>{" "}
-          by <a href="https://twitter.com/powerlanguish">powerlanguage</a>. This version was created by by <a href={"https://sacha.beniamine.net"}>Sacha Beniamine</a> based on the open source version <a href="https://hellowordl.net/">Hello Wordl</a>.
+          by <a href="https://twitter.com/powerlanguish">powerlanguage</a>. This version was created by <a href={"https://sacha.beniamine.net"}>Sacha Beniamine</a> based on the open source version <a href="https://hellowordl.net/">Hello Wordl</a>.
       </p>
       <hr />
         {help_texts[language]}
       <hr />
       <p>
-        You get {maxGuesses} tries to guess a target word. The game answers each guess by colored feedback.
+        You get {maxGuesses} tries to guess a target word. Each answer triggers colored feedback.
       </p>
       <Row
         rowState={RowState.LockedIn}
