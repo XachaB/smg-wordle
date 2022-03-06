@@ -66,6 +66,9 @@ margin:0 2em;
   padding-right:13px
 }
 
+
+
+
 .App-container {
   position: relative;
   max-width: 500px;
@@ -329,11 +332,11 @@ a:active {
   background-color: #85c0f9;
 }
 
-._2FKZL a {
+._2FKZL .suggestion a {
   color: black;
   pointer-events: none;
+  background-image:none;
 }
-
 .word {
   font-size: 120%;
 }
