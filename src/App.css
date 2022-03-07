@@ -37,6 +37,7 @@ margin:0 2em;
   justify-content: center;
   align-items: center;
   font-weight: bold;
+  border-radius: 3px;
 }
 .Row-letter-color {
   margin: 2px;
@@ -310,14 +311,21 @@ a:active {
 }
 
 .emoji-link {
-  font-size: 24px;
+  font-size: 28px;
   text-decoration: none;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
+  color: transparent;
+  text-shadow: 0 0 0 black;
 }
 
+
+body.dark .emoji-link {
+  text-shadow: 0 0 0 white;
+
+}
 .top-right > * + * {
   margin-inline-start: 8px;
 }
