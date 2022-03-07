@@ -374,9 +374,7 @@ body {
   font-size:11pt;
 }
 
-.Game-keyboard-button,
-.Row-letter,
-.Row-letter-color {
+.Game-keyboard-button {
   font-size: 12pt;
 }
 
@@ -402,9 +400,7 @@ body {
   font-size:10pt;
 }
 
-.Game-keyboard-button,
-.Row-letter,
-.Row-letter-color {
+.Game-keyboard-button {
   font-size: 11pt;
 }
 
